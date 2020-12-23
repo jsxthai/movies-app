@@ -7,6 +7,7 @@ const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=04c35731a5
 function App() {
     const [movies, setMovies] = useState([]);
     const [searchKey, setSearchKey] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchMovies = (API) => {
         fetch(API)
@@ -18,6 +19,7 @@ function App() {
 
     useEffect(() => {
         fetchMovies(FEATURED_API);
+        setIsLoading(false);
     }, []);
 
     const handleSubmit = (e) => {
@@ -35,6 +37,10 @@ function App() {
     const handleClick = () => {
         fetchMovies(FEATURED_API);
     };
+
+    if (isLoading) {
+        return <h3>Loading .....</h3>;
+    }
 
     return (
         <div className="container">
@@ -55,8 +61,13 @@ function App() {
                 </div>
             </div>
             <div className="movie-container">
-                {movies.length > 0 &&
-                    movies.map((movie) => <Movie key={movie.id} {...movie} />)}
+                {movies.length > 0 ? (
+                    movies.map((movie) => <Movie key={movie.id} {...movie} />)
+                ) : (
+                    <h2 style={{ marginTop: "50px" }}>
+                        There has been no result
+                    </h2>
+                )}
             </div>
         </div>
     );
